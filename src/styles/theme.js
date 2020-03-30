@@ -1,11 +1,12 @@
 export const theme = {
   palette: {
-    primary: '#3B3E45',
+    // primary: '#3B3E45',
+    primary: '#f2f1ef',
     black: '#000000',
     white: '#FFFFFF',
     action: '#E37526',
-    greyLight: '#D2D7D3',
-    greyDark: '#a9a9a9',
+    greyLight: '#808080',
+    greyDark: '#6C7A89',
     alert: '#f64747',
   },
   space: {
