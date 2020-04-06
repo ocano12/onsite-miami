@@ -21,7 +21,9 @@ export const OsButton = props => {
     );
   } else {
     return (
-      <TouchableOpacity onPress={onPress}>{buttonRender}</TouchableOpacity>
+      <TouchableOpacity onPress={onPress} style={buttonStyles.container}>
+        {buttonRender}
+      </TouchableOpacity>
     );
   }
 };

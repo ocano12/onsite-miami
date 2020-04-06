@@ -5,9 +5,10 @@ export const theme = {
     black: '#000000',
     white: '#FFFFFF',
     action: '#E37526',
+    text: '#36373F',
     greyLight: '#808080',
     greyDark: '#6C7A89',
-    alert: '#f64747',
+    alert: '#d50000',
   },
   space: {
     tiny: 4,
@@ -20,6 +21,7 @@ export const theme = {
   fontSize: {
     tiny: 4,
     small: 8,
+    smedium: 12,
     regular: 16,
     medium: 24,
     large: 32,

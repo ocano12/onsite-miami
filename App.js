@@ -9,10 +9,10 @@
 // export default from './storybook';
 import React from 'react';
 import { SafeAreaView } from 'react-native';
-import { Login } from './src/screens';
+import AppContainer from './src/routes';
 
 const App = () => {
-  return <Login />;
+  return <AppContainer />;
 };
 
 export default App;

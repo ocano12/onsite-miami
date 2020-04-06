@@ -3,10 +3,10 @@ import { SafeAreaView, View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 import { FormInput } from './';
 import { theme, global } from '../../styles';
-const StoryComponent = props => {
+const StoryComponent = (props) => {
   const [text, setText] = useState('');
 
-  const handleChange = value => {
+  const handleChange = (value) => {
     setText(value);
   };
 
@@ -25,5 +25,11 @@ storiesOf('FormInput', module)
     <View style={global.flex}>
       <StoryComponent />
       <StoryComponent secureTextEntry />
+    </View>
+  ))
+  .add('errors', () => (
+    <View style={global.flex}>
+      <StoryComponent />
+      <StoryComponent hasErrors errorMessage={'fucking shit balls asshole'} />
     </View>
   ));

@@ -1,11 +1,23 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Alert, Image } from 'react-native';
-import { FormInput, OsButton } from '../../components';
-import { theme, global } from '../../styles/theme';
-import Layout from '../../../layout/Layout';
+import {
+  SafeAreaView,
+  View,
+  Alert,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from 'react-native';
+import {
+  FormInput,
+  OsButton,
+  OsText,
+  OsLogo,
+  OsLoginFooter,
+} from '@components';
+import { theme, global } from '@styles';
+import { Layout } from '@layout';
 import LoginStyles from './index.styles';
 
-const Login = () => {
+const Login = props => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -14,29 +26,24 @@ const Login = () => {
     Alert.alert(`${userName} and ${password}`);
   };
 
+  const signUp = () => {
+    props.navigation.navigate('Role');
+  };
+
   return (
     <Layout>
-      <View style={LoginStyles.container}>
+      <KeyboardAvoidingView style={LoginStyles.container} behavior="padding">
         <View style={LoginStyles.imageContainer}>
-          <Image
-            source={require('../../../assets/icons/logo.png')}
-            style={LoginStyles.image}
-            resizeMode="contain"
-          />
+          <OsLogo />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={LoginStyles.inputContainer}>
           <View style={LoginStyles.username}>
-            <FormInput
-              placeholder={'Username'}
-              onChangeText={setUserName}
-              placeholderTextColor={theme.palette.greyLight}
-            />
+            <FormInput placeholder={'Username'} onChangeText={setUserName} />
           </View>
           <View style={LoginStyles.password}>
             <FormInput
               placeholder={'Password'}
               onChangeText={setPassword}
-              placeholderTextColor={theme.palette.greyLight}
               secureTextEntry={!showPassword}
             />
             <View style={LoginStyles.showPassword}>
@@ -58,9 +65,20 @@ const Login = () => {
             onPress={submit}
           />
         </View>
-      </View>
+        <View style={LoginStyles.signUpContainer}>
+          <OsLoginFooter
+            text="Don't have an account?"
+            buttonText="Sign Up"
+            onPress={signUp}
+          />
+        </View>
+      </KeyboardAvoidingView>
     </Layout>
   );
+};
+
+Login.navigationOptions = {
+  headerShown: false,
 };
 
 export default Login;

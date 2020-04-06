@@ -1,17 +1,27 @@
 import React from 'react';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { Login } from '../screens';
+import { Login, Role, SignUpForm } from '../screens';
+import { theme } from '../styles';
+
+const defaultHeaderOptions = {
+  defaultNavigationOptions: ({ navigation }) => ({
+    title: null,
+    headerStyle: {
+      backgroundColor: theme.palette.primary,
+      shadowColor: 'transparent',
+    },
+    headerBackTitle: ' ',
+  }),
+};
 
 const UnAuthScreens = createStackNavigator(
   {
     Login,
+    Role,
+    SignUpForm,
   },
-  {
-    defaultNavigationOptions: () => ({
-      header: null,
-    }),
-  },
+  defaultHeaderOptions,
 );
 
 const AppSwitchNavigator = createSwitchNavigator(
@@ -19,7 +29,7 @@ const AppSwitchNavigator = createSwitchNavigator(
     UnAuthScreens: UnAuthScreens,
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'UnAuthScreens',
   },
 );
 

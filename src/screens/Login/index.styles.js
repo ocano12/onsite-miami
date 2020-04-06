@@ -4,33 +4,35 @@ import { theme } from '../../styles/theme';
 const LoginStyles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: theme.space.default,
-    backgroundColor: theme.palette.primary,
+    padding: theme.space.small,
   },
   imageContainer: {
-    flex: 1,
+    flex: 1.7,
     alignItems: 'center',
-    marginTop: theme.space.default,
+    justifyContent: 'center',
+    paddingTop: theme.space.default,
   },
-  image: {
-    height: 200,
-    width: 200,
-  },
-  username: {
-    marginVertical: theme.space.default,
+  inputContainer: {
+    flex: 1.3,
+    justifyContent: 'space-evenly',
   },
   password: {
     position: 'relative',
-    marginVertical: theme.space.default,
   },
   showPassword: {
     position: 'absolute',
     right: theme.space.small,
   },
   loginButton: {
+    flex: 0.7,
+    justifyContent: 'center',
+  },
+  signUpContainer: {
     flex: 2,
-    marginTop: theme.space.large,
+    justifyContent: 'center',
   },
 });
+
+//TO DO when screen shrinks reorganize css
 
 export default LoginStyles;
