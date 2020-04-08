@@ -13,74 +13,17 @@ import {
 import { theme } from '@styles';
 import signUpStyles from './SignUp.styles';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
+import * as signUpActions from '../../store/actions/signup';
 
 const SignUpForm = (props) => {
-  const { navigation } = props;
-  const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+  const { navigation, updateForm, valid, message, values } = props;
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
   const userType = navigation.getParam('userType');
-
-  const initalState = {
-    inputValues: {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
-    inputValid: {
-      name: false,
-      email: false,
-      password: false,
-      confirmPassword: false,
-    },
-    inputErrorMessage: {
-      name: 'Please enter a name!',
-      email: 'Please enter an email!',
-      password: 'Please enter a password!',
-      confirmPassword: 'Please re enter the password!',
-    },
-  };
-
-  const formReducer = (state, action) => {
-    let updateErrorMessage;
-    // console.log(action.input, action.message);
-    if (action.type === FORM_INPUT_UPDATE) {
-      const updateValue = {
-        ...state.inputValues,
-        [action.input]: action.value,
-      };
-      const updateIsValid = {
-        ...state.inputValid,
-        [action.input]: action.isValid,
-      };
-      if (action.message.length > 0) {
-        updateErrorMessage = {
-          ...state.inputErrorMessage,
-          [action.input]: action.message,
-        };
-      } else {
-        updateErrorMessage = {
-          ...state.inputErrorMessage,
-          [action.input]: initalState.inputErrorMessage[action.input],
-        };
-      }
-      return {
-        inputValues: updateValue,
-        inputValid: updateIsValid,
-        inputErrorMessage: updateErrorMessage,
-      };
-    } else {
-      return state;
-    }
-  };
-
-  const [formState, dispatchFormUpdate] = useReducer(formReducer, initalState);
-
-  ///add a action for when the form is submitted
 
   const handleInput = (inputIdentifier, text) => {
     let isValid = false;
@@ -93,23 +36,19 @@ const SignUpForm = (props) => {
           isValid = true;
         }
         break;
+
       case 'email':
         if (emailRegex.test(String(text).toLowerCase()) == true) {
           isValid = true;
         }
         break;
+
       case 'password':
         if (text.length > 5) {
           isValid = true;
-          if (formState.inputValues.confirmPassword.length > 5) {
-            if (text === formState.inputValues.confirmPassword) {
-              dispatchFormUpdate({
-                type: FORM_INPUT_UPDATE,
-                value: text,
-                isValid: true,
-                input: 'confirmPassword',
-                message: errorMessage,
-              });
+          if (values.confirmPassword.length > 5) {
+            if (text === values.confirmPassword) {
+              updateForm('confirmPassword', text, true, errorMessage);
             } else {
               isValid = false;
               errorMessage = 'Passwords must match!';
@@ -119,16 +58,11 @@ const SignUpForm = (props) => {
           errorMessage = 'Password must have at least 6 characters!';
         }
         break;
+
       case 'confirmPassword':
-        if (text === formState.inputValues.password && text.length > 5) {
-          if (formState.inputValues.password.length > 5) {
-            dispatchFormUpdate({
-              type: FORM_INPUT_UPDATE,
-              value: text,
-              isValid: true,
-              input: 'password',
-              message: errorMessage,
-            });
+        if (text === values.password && text.length > 5) {
+          if (values.password.length > 5) {
+            updateForm('password', text, true, errorMessage);
             isValid = true;
           } else {
             isValid = true;
@@ -137,27 +71,16 @@ const SignUpForm = (props) => {
           errorMessage = 'Passwords must match!';
         }
     }
-    dispatchFormUpdate({
-      type: FORM_INPUT_UPDATE,
-      value: text,
-      isValid: isValid,
-      input: inputIdentifier,
-      message: errorMessage,
-    });
+    updateForm(inputIdentifier, text, isValid, errorMessage);
   };
 
   const submitHandler = () => {
-    setNameError(!formState.inputValid.name);
-    setEmailError(!formState.inputValid.email);
-    setPasswordError(!formState.inputValid.password);
-    setConfirmPasswordError(!formState.inputValid.confirmPassword);
+    setNameError(!valid.name);
+    setEmailError(!valid.email);
+    setPasswordError(!valid.password);
+    setConfirmPasswordError(!valid.confirmPassword);
 
-    if (
-      formState.inputValid.name &&
-      formState.inputValid.email &&
-      formState.inputValid.password &&
-      formState.inputValid.confirmPassword
-    ) {
+    if (valid.name && valid.email && valid.password && valid.confirmPassword) {
       Alert.alert('formSubmit');
     } else {
       return;
@@ -179,30 +102,28 @@ const SignUpForm = (props) => {
           <FormInput
             placeholder="Name"
             onChangeText={(text) => handleInput('name', text)}
-            hasErrors={nameError && !formState.inputValid.name}
-            errorMessage={formState.inputErrorMessage.name}
+            hasErrors={nameError && !valid.name}
+            errorMessage={message.name}
           />
           <FormInput
             placeholder="Email"
             onChangeText={(text) => handleInput('email', text)}
-            hasErrors={emailError && !formState.inputValid.email}
-            errorMessage={formState.inputErrorMessage.email}
+            hasErrors={emailError && !valid.email}
+            errorMessage={message.email}
           />
           <FormInput
             placeholder="Password"
             secureTextEntry
             onChangeText={(text) => handleInput('password', text)}
-            hasErrors={passwordError && !formState.inputValid.password}
-            errorMessage={formState.inputErrorMessage.password}
+            hasErrors={passwordError && !valid.password}
+            errorMessage={message.password}
           />
           <FormInput
             placeholder="Confirm Password"
             secureTextEntry
             onChangeText={(text) => handleInput('confirmPassword', text)}
-            hasErrors={
-              confirmPasswordError && !formState.inputValid.confirmPassword
-            }
-            errorMessage={formState.inputErrorMessage.confirmPassword}
+            hasErrors={confirmPasswordError && !valid.confirmPassword}
+            errorMessage={message.confirmPassword}
           />
           <OsButton
             title={'Sign Up'}
@@ -221,4 +142,15 @@ const SignUpForm = (props) => {
   );
 };
 
-export default SignUpForm;
+const mapStateToProps = (state) => ({
+  valid: state.signUp.inputValid,
+  message: state.signUp.inputErrorMessage,
+  values: state.signUp.inputValues,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  updateForm: (input, value, isValid, message) =>
+    dispatch(signUpActions.updateForm(input, value, isValid, message)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpForm);
