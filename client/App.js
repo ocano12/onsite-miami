@@ -11,13 +11,26 @@ import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { Provider } from 'react-redux';
 import AppContainer from './src/routes';
-import store from './src/store/';
+import {
+  ApolloProvider,
+  ApolloClient,
+  HttpLink,
+  InMemoryCache,
+  gql,
+} from '@apollo/client';
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: new HttpLink({
+    uri: 'http://localhost:4000/graphql',
+  }),
+});
 
 const App = () => {
   return (
-    <Provider store={store}>
+    <ApolloProvider client={client}>
       <AppContainer />
-    </Provider>
+    </ApolloProvider>
   );
 };
 
