@@ -9,7 +9,8 @@ const typeDefs = gql`
   }
 
   type Query {
-    users: [User]
+    getAllUsers: [User]
+    emailExists(email: String!): Boolean!
   }
 
   type Mutation {
