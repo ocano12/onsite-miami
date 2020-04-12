@@ -7,7 +7,8 @@
         "alias": {
           "@components": "./src/components/",
           "@styles": "./src/styles/",
-          "@layout": "./layout/"
+          "@layout": "./layout/",
+          "@graphql": "./src/graphql/"
         }
       }
     ]
