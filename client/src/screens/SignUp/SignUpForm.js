@@ -11,9 +11,8 @@ import {
 import { theme } from '@styles';
 import signUpStyles from './SignUp.styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { ADD_USER } from '@graphql/users';
-import { useMutation } from '@apollo/client';
-import { add } from 'react-native-reanimated';
+import { ADD_USER, EMAIL_EXISTS } from '@graphql/users';
+import { useQuery, useMutation } from '@apollo/client';
 
 const SignUpForm = props => {
   const { navigation } = props;
@@ -80,7 +79,9 @@ const SignUpForm = props => {
   };
 
   const [formState, dispatchFormUpdate] = useReducer(formReducer, initalState);
-
+  const { loading, error, data: data_email_exists } = useQuery(EMAIL_EXISTS, {
+    variables: { email: formState.inputValues.email },
+  });
   ///add a action for when the form is submitted
 
   const handleInput = (inputIdentifier, text) => {
@@ -159,15 +160,19 @@ const SignUpForm = props => {
       formState.inputValid.password &&
       formState.inputValid.confirmPassword
     ) {
-      addUser({
-        variables: {
-          name: formState.inputValues.name,
-          email: formState.inputValues.email,
-          type: userType,
-          password: formState.inputValues.password,
-        },
-      });
-      Alert.alert('User Submitted');
+      if (!data_email_exists.emailExists) {
+        addUser({
+          variables: {
+            name: formState.inputValues.name,
+            email: formState.inputValues.email,
+            type: userType,
+            password: formState.inputValues.password,
+          },
+        });
+        Alert.alert('User Submitted');
+      } else {
+        Alert.alert('Email is already active');
+      }
     } else {
       return;
     }

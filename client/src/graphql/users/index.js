@@ -15,3 +15,9 @@ export const ADD_USER = gql`
     }
   }
 `;
+
+export const EMAIL_EXISTS = gql`
+  query email_exists($email: String!) {
+    emailExists(email: $email)
+  }
+`;

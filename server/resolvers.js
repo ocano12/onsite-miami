@@ -2,9 +2,13 @@ import { UserInputError } from 'apollo-server-express';
 
 const resolvers = {
   Query: {
-    users: async (root, args, { User }) => {
+    getAllUsers: async (root, args, { User }) => {
       const allUsers = await User.find();
       return allUsers;
+    },
+    emailExists: async (root, email, { User }) => {
+      const emailExists = await User.findOne(email);
+      return emailExists ? true : false;
     },
   },
   Mutation: {
